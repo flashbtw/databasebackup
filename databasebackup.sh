@@ -10,7 +10,7 @@ fi
 PFAD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
 DATABASE_LIST="$PFAD/databases.list"
 BACKUP_LOCATION="$PFAD/databasebackups/"
-source $PFAD/databases.list
+source $DATABASE_LIST
 
 if test -d $BACKUP_LOCATION ; then
   echo "Backup Directory already exists"
