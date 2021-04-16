@@ -1,6 +1,6 @@
 This program is configurable and flexible to save your databases in .sql files in the "databasebackups" directory.\
 How to configure databases.list:\
-Default content of databases.list:\
+Default content of databases.list:
 
 ```bash
 #!/bin/bash
