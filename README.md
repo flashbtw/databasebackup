@@ -2,9 +2,13 @@ This program is configurable and flexible to save your databases in .sql files i
 How to configure databases.list:
 Default content of databases.list:
 
+
+
  #!/bin/bash
  
  DATABASES=("db1" "db2" "db3")
+
+
 
 How to deploy your own databases:
  Syntax: 
