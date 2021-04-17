@@ -4,6 +4,7 @@
 WHOAMI=`whoami`
 if [ $WHOAMI != "root" ]; then
   echo "Access denied"
+  exit
 else
   echo "Program executing now."
 fi
@@ -39,24 +40,50 @@ else
   echo "File successfully created."
   exit
 fi
+
 source $DATABASE_LIST
 
 #checking if the backup directory exists
 if test -d $BACKUP_LOCATION ; then
-  echo "Backup Directory already exists"
+  echo "Backup Directory exists"
 else
   mkdir $BACKUP_LOCATION
   echo "Created Backup Directory successfully"
 fi
 
+read -p 'Are your databases in use right now? (y/n)' DATABASE_IN_USE
+
+if [ $DATABASE_IN_USE == "y" ]; then
+  for i in ${!DATABASES[@]};
+  do
+    DATABASE=${DATABASES[$i]}
+    printf "$DATABASE is now getting saved.\n"
+    sleep 1
+    sudo -u root mysqldump -u root --single-transaction $DATABASE > $BACKUP_LOCATION/$DATABASE.sql
+  done
+else
+  if [ $DATABASE_IN_USE == "n" ]; then
+    for i in ${!DATABASES[@]};
+    do
+      DATABASE=${DATABASES[$i]}
+      printf "$DATABASE is now getting saved.\n"
+      sleep 1
+      sudo -u root mysqldump -u root $DATABASE > $BACKUP_LOCATION/$DATABASE.sql
+    done
+  else
+    echo "\"$DATABASE_IN_USE\" is not a valid answer."
+    exit
+  fi
+fi
+
 #main loop
-for i in ${!DATABASES[@]};
-do
-  DATABASE=${DATABASES[$i]}
-  printf "$DATABASE is now getting saved.\n"
-  sleep 1
-  sudo -u root mysqldump -u root $DATABASE > $BACKUP_LOCATION/$DATABASE.sql
-done
+#for i in ${!DATABASES[@]};
+#do
+#  DATABASE=${DATABASES[$i]}
+#  printf "$DATABASE is now getting saved.\n"
+#  sleep 1
+#  sudo -u root mysqldump -u root $DATABASE > $BACKUP_LOCATION/$DATABASE.sql
+#done
 
 echo "program ends."
 exit
