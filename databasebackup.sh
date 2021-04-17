@@ -1,18 +1,28 @@
 #!/bin/bash
 
+### printf colors ###
+NORMAL=$(tput sgr0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+CYAN=$(tput setaf 6)
+YELLOW=$(tput setaf 3)
+
+### echo colors ###
+ECHO_YELLOW="\033[38;5;11m"
+
 # user verification #
 WHOAMI=`whoami`
 if [ $WHOAMI != "root" ]; then
-  echo "Access denied"
+  printf "${RED}Access denied${NORMAL}"
   exit
 else
-  echo "Program executing now."
+  echo "${CYAN}Program executing now.${CYAN}"
 fi
 
 # error catching #
 trap 'catch $? $LINENO' ERR
 catch() {
-  echo "Error occured in Line $2"
+  printf "${RED}Error occured in Line $2"
 }
 
 ### variables ###
@@ -30,14 +40,14 @@ BACKUP_LOCATION="$PFAD/databasebackups/"
 if test -f $DATABASE_LIST ; then
   printf ""
 else
-  echo "FATAL: No Database List found. Creating one and exiting so you can configure it."
+  printf "${RED}FATAL: No Database List found. Creating one and exiting so you can configure it.${NORMAL}"
   touch $DATABASE_LIST
   {
   printf "#!/bin/bash\n\n"
   printf "DATABASES=(\"db1\" \"db2\" \"db3\")"
   } >$DATABASE_LIST
   sleep 1
-  echo "File successfully created."
+  printf "${GREEN}File successfully created.${NORMAL}"
   exit
 fi
 
@@ -45,27 +55,32 @@ source $DATABASE_LIST
 
 #checking if the backup directory exists
 if test -d $BACKUP_LOCATION ; then
-  echo "Backup Directory exists"
+  printf "${CYAN}Backup Directory exists${NORMAL}\n"
 else
   mkdir $BACKUP_LOCATION
-  echo "Created Backup Directory successfully"
+  printf "${CYAN}Created Backup Directory successfully${NORMAL}"
 fi
 
 catch() {
-  echo "Database $DATABASE not found."
+  DATABASE_EXISTS=false
 }
 
-read -p 'Are your databases in use right now? (y/n)' DATABASE_IN_USE
+read -p "$(echo -e $ECHO_YELLOW"Are your databases in use right now? (y/n)" )" DATABASE_IN_USE
 
 if [ $DATABASE_IN_USE == "y" ]; then
   for i in ${!DATABASES[@]};
   do
     DATABASE=${DATABASES[$i]}
-    printf "$DATABASE is now getting saved.\n"
     sleep 1
     {
     sudo -u root mysqldump -u root --single-transaction $DATABASE > $BACKUP_LOCATION/$DATABASE.sql
     } 2>/dev/null
+    if [ "$DATABASE_EXISTS" = false ] ; then
+      printf "${RED}Database $DATABASE not existing${NORMAL}\n"
+      DATABASE_EXISTS=null 
+    else
+      printf "${GREEN}Database $DATABASE is now getting saved.${NORMAL}\n"
+    fi
   done
 else
   if [ $DATABASE_IN_USE == "n" ]; then
@@ -84,5 +99,5 @@ else
   fi
 fi
 
-echo "program ends."
+printf "${CYAN}\nprogram ends.\n"
 exit
