@@ -12,7 +12,7 @@ fi
 # error catching #
 trap 'catch $? $LINENO' ERR
 catch() {
-  echo "" >/dev/null
+  echo "Error occured in Line $2"
 }
 
 ### variables ###
@@ -51,6 +51,10 @@ else
   echo "Created Backup Directory successfully"
 fi
 
+catch() {
+  echo "Database $DATABASE not found."
+}
+
 read -p 'Are your databases in use right now? (y/n)' DATABASE_IN_USE
 
 if [ $DATABASE_IN_USE == "y" ]; then
@@ -59,7 +63,9 @@ if [ $DATABASE_IN_USE == "y" ]; then
     DATABASE=${DATABASES[$i]}
     printf "$DATABASE is now getting saved.\n"
     sleep 1
+    {
     sudo -u root mysqldump -u root --single-transaction $DATABASE > $BACKUP_LOCATION/$DATABASE.sql
+    } 2>/dev/null
   done
 else
   if [ $DATABASE_IN_USE == "n" ]; then
@@ -68,7 +74,9 @@ else
       DATABASE=${DATABASES[$i]}
       printf "$DATABASE is now getting saved.\n"
       sleep 1
+      {
       sudo -u root mysqldump -u root $DATABASE > $BACKUP_LOCATION/$DATABASE.sql
+      } 2>/dev/null
     done
   else
     echo "\"$DATABASE_IN_USE\" is not a valid answer."
