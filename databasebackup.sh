@@ -78,6 +78,9 @@ if [ $DATABASE_IN_USE == "y" ]; then
     } 2>/dev/null
     if [ "$DATABASE_EXISTS" = false ] ; then
       printf "${RED}Database $DATABASE not existing${NORMAL}\n"
+      {
+      rm $BACKUP_LOCATION/$DATABASE.sql
+      } 2>/dev/null
       DATABASE_EXISTS=null
     else
       printf "${GREEN}Database $DATABASE is now getting saved.${NORMAL}\n"
@@ -94,6 +97,9 @@ else
       } 2>/dev/null
       if [ "$DATABASE_EXISTS" = false ] ; then
         printf "${RED}Database $DATABASE not existing${NORMAL}\n"
+        {
+        rm $BACKUP_LOCATION/$DATABASE.sql
+        } 2>/dev/null
         DATABASE_EXISTS=null
       else
         printf "${GREEN}Database $DATABASE is now getting saved.${NORMAL}\n"
