@@ -76,14 +76,5 @@ else
   fi
 fi
 
-#main loop
-#for i in ${!DATABASES[@]};
-#do
-#  DATABASE=${DATABASES[$i]}
-#  printf "$DATABASE is now getting saved.\n"
-#  sleep 1
-#  sudo -u root mysqldump -u root $DATABASE > $BACKUP_LOCATION/$DATABASE.sql
-#done
-
 echo "program ends."
 exit
