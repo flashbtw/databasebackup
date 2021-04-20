@@ -1,3 +1,0 @@
-#!/bin/bash
-
-DATABASES=("db1" "db2" "db3" "darta")
