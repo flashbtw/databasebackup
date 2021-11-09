@@ -8,9 +8,9 @@ Default content of databases.list:
 DATABASES=("db1" "db2" "db3")
 ```
 
-How to deploy your own databases:\
-**__Syntax:__** \
-DATABASES=("your_first_database" "your_second_database" "your_third_database" "your_fourth_database" "...")\
-Theoretically, it is infinitely expandable.\
-\
+<h3>How to deploy your own databases:</h3>
+<h4>Syntax</h4>
+DATABASES=("your_first_database" "your_second_database" "your_third_database" "your_fourth_database" "...")
+Theoretically, it is infinitely expandable.
+
 Have fun! 
